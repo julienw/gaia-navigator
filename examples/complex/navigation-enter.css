@@ -1,0 +1,18 @@
+/* enter animation */
+.panel {
+  animation: slide-from-left 2s;
+}
+
+.panel.from-right {
+  animation-name: slide-from-right;
+}
+
+@keyframes slide-from-left {
+  from { transform: translateX(100%) }
+  to {}
+}
+
+@keyframes slide-from-right {
+  from { transform: translateX(-100%) }
+  to {}
+}
