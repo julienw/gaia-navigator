@@ -1,10 +1,4 @@
-/* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- /
-/* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
-
-/* globals ContactPhotoHelper, Notification, Promise, Threads, Settings,
-           Dialog,
-           Promise
-*/
+/* jshint esnext: true */
 
 (function(exports) {
   'use strict';
@@ -17,6 +11,20 @@
         parsed[$1] = $2;
       });
       return parsed;
+    },
+
+    url(base, params) {
+      if (base.indexOf('?') === -1) {
+        base += '?';
+      } else {
+        base += '&';
+      }
+
+      for (var key in params) {
+        base += encodeURIComponent(`${key}=${params[key]}&`);
+      }
+
+      return base;
     }
   };
 

@@ -3,39 +3,21 @@
 (function(exports) {
   'use strict';
 
-  var panel = document.querySelector('.panel');
-
-  function addParameter(url, param) {
-    if (url.indexOf('?') === -1) {
-      url += '?';
-    } else {
-      url += '&';
-    }
-    url += encodeURIComponent(param);
-    return url;
-  }
-
-  function initFromUrl() {
-    var current = Utils.params(location.search);
-    if ('fromRight' in current) {
-      panel.classList.add('from-right');
-    }
-  }
-
   function setLocation(url) {
     gnc_getLocation().assign(url);
   }
 
-  initFromUrl();
+  const VIEWS = Object.freeze({
+    conversation: 'conversation.html',
+    inbox: 'inbox.html'
+  });
 
   exports.Navigation = {
-    left(url) {
-      url = addParameter(url, 'fromRight=1');
-      panel.classList.add('to-left');
-      setLocation(url);
+    back() {
+      gnc_getLocation.back();
     },
-    right(url) {
-      panel.classList.remove('to-left');
+
+    go(view, args) {
       setLocation(url);
     }
   };
