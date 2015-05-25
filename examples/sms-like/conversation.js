@@ -59,7 +59,7 @@
     },
 
     navigateBack() {
-      Navigation.left(this[priv.backButton].href);
+      Navigation.back();
     },
 
     hideDialog() {

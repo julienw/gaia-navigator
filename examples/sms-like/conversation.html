@@ -11,10 +11,12 @@
     <script src='navigation.js' defer></script>
     <script src='conversation.js' defer></script>
     <script src='../../gaia-navigator.js' defer></script>
+    <script src='startup.js' defer></script>
+
   </head>
   <body>
     <section class='panel'>
-      <a href='inbox.html' class='js-back-button'>Go back</a>
+      <button class='js-back-button back-button'type='button'>Go back</button>
       <label class='inline-checkbox'>
         <input type='checkbox' class='js-should-confirm-checkbox'> with confirmation
       </label>
@@ -23,8 +25,8 @@
       <div class='js-confirmation-dialog dialog' hidden>
         <p>Do you really want to go back ?</p>
         <div class='dialog-choices'>
-          <button class='js-dialog-choice-yes'>Yes</button>
-          <button class='js-dialog-choice-no'>No</button>
+          <button class='js-dialog-choice-yes' type='button'>Yes</button>
+          <button class='js-dialog-choice-no' type='button'>No</button>
         </div>
       </div>
     </section>
