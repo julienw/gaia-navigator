@@ -18,12 +18,25 @@
         }
       });
 
+      this.onBackButtonClicked = this.onBackButtonClicked.bind(this);
+      this.navigateBack = this.navigateBack.bind(this);
+
       document.querySelector('.js-dialog-choice-yes').addEventListener(
-        'click', this.navigateBack.bind(this)
+        'click', this.navigateBack
       );
 
       this[priv.backButton].addEventListener(
-        'click', this.onBackButtonClicked.bind(this)
+        'click', this.onBackButtonClicked
+      );
+    },
+
+    cleanup() {
+      document.querySelector('.js-dialog-choice-yes').removeEventListener(
+        'click', this.navigateBack
+      );
+
+      this[priv.backButton].removeEventListener(
+        'click', this.onBackButtonClicked
       );
     },
 
@@ -33,12 +46,12 @@
       this.initView();
 
       var content = document.querySelector('.content');
-      var threadId = Utils.params(window.location.search).id;
-      content.textContent = `this is thread ${threadId}`;
+      content.textContent = `this is thread ${args.id}`;
     },
 
     beforeLeave(args) {
       console.log('ConversationView.beforeLeave', args);
+      this.cleanup();
     },
 
     afterEnter(args) {
