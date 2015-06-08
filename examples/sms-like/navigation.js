@@ -53,27 +53,6 @@
     );
   }
 
-  function isFirstNavigationDocument() {
-    return gnc_getHistory().length === 1;
-  }
-
-  function pushMissingDocuments() {
-    var toPush = [currentView];
-    var current = currentView;
-    while (current.previous) {
-      current = findViewFromName(current.previous);
-      toPush.unshift(current);
-    }
-
-    if (toPush.length) {
-      gnc_getHistory().replaceState(null, null, toPush[0].url);
-
-      toPush.slice(1).forEach((view) => {
-        gnc_getHistory().pushState(null, null, view.url);
-      });
-    }
-  }
-
   exports.Navigation = {
     back() {
       return executeNavigationStep('beforeLeave').then(
@@ -92,10 +71,6 @@
       currentView = findViewFromLocation(window.location);
       if (!currentView) {
         return;
-      }
-
-      if (isFirstNavigationDocument()) {
-        pushMissingDocuments();
       }
 
       var args = Utils.params(window.location.search);

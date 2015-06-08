@@ -1,0 +1,11 @@
+{
+  "name": "Navigation example",
+  "description": "",
+  "launch_path": "/inbox.html",
+  "developer": {
+    "name": "The Gaia Team",
+    "url": "https://github.com/mozilla-b2g/gaia"
+  },
+  "default_locale": "en-US",
+  "orientation": "default"
+}
