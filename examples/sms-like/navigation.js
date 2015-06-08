@@ -35,11 +35,12 @@
       return null;
     }
 
-    if (hash[0] === '#') {
-      hash = hash.slice(1);
+    var index = hash.indexOf('/');
+    if (index != -1) {
+      hash = hash.slice(index + 1);
     }
 
-    var index = hash.indexOf('?');
+    index = hash.indexOf('?');
     if (index !== -1) {
       hash = hash.slice(0, index);
     }
@@ -107,6 +108,33 @@
     // TODO: return Etienne's wait for next dom scheduler tick ?
   }
 
+  function onPopState(e) {
+    var oldView = currentView;
+    currentView = findViewFromLocation(window.location);
+    if (!currentView) {
+      return;
+    }
+
+    var args = Utils.params(window.location.hash);
+    executeNavigationStep('beforeLeave', args).then(
+      () => executeNavigationStep('beforeEnter', args)
+    ).then(
+      () => switchPanel(oldView, currentView)
+    ).then(
+      () => executeNavigationStep('afterEnter', args)
+    );
+  }
+
+  function attachHistoryListener() {
+    //window.addEventListener('popstate', onPopState);
+    window.addEventListener('hashchange', onPopState);
+  }
+
+  function detachHistoryListener() {
+    //window.removeEventListener('popstate', onPopState);
+    window.removeEventListener('hashchange', onPopState);
+  }
+
   exports.Navigation = {
     back() {
       return executeNavigationStep('beforeLeave').then(
@@ -134,9 +162,10 @@
         currentParentView = findViewFromName(currentView.partOf);
       }
 
-      var beforeLeavePromise = executeNavigationStep('beforeLeave');
+      var beforeLeavePromise = executeNavigationStep('beforeLeave', args);
 
       hash = Utils.url(hash, args);
+      var oldView = currentView;
 
       if (parentView === currentParentView) {
         // no document change
@@ -145,7 +174,7 @@
         ).then(
           () => executeNavigationStep('beforeEnter', args)
         ).then(
-          () => switchPanel(currentView, view)
+          () => switchPanel(oldView, view)
         ).then(
           () => executeNavigationStep('afterEnter', args)
         );
@@ -168,6 +197,12 @@
         () => switchPanel(null, currentView)
       );
       attachAfterEnterHandler();
+      attachHistoryListener();
+    },
+
+    /* will be used by tests */
+    cleanup() {
+      detachHistoryListener();
     }
   };
 })(window);

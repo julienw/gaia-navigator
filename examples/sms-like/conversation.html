@@ -17,12 +17,13 @@
   <body>
     <section class='panel panel-conversation'>
       <h1>Conversation View</h1>
-      <button class='js-back-button back-button'type='button'>Go back</button>
+      <button class='panel-conversation-back-button'type='button'>Go back</button>
       <label class='inline-checkbox'>
         <input type='checkbox' class='js-should-confirm-checkbox'> with confirmation
       </label>
-      <div class='content'>
+      <div class='panel-conversation-content'>
       </div>
+      <div><a href='#!/report?id=XXX' class='view-report-link'>View report for this conversation</a></div>
       <div class='js-confirmation-dialog dialog' hidden>
         <p>Do you really want to go back ?</p>
         <div class='dialog-choices'>
@@ -33,7 +34,8 @@
     </section>
 
     <section class='panel panel-report'>
-      <h1>Report view</h1>
+      <h1><button class='panel-report-back-button' type='button'>Go back</button> Report view</h1>
+      <h2 class='panel-report-title'>For id XXX</h2>
     </section>
   </body>
 </html>

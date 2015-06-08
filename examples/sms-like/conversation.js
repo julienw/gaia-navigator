@@ -4,12 +4,14 @@
 
   const priv = Object.freeze({
     backButton: Symbol('backButton'),
-    confirmDialog: Symbol('confirmDialog')
+    confirmDialog: Symbol('confirmDialog'),
+    reportLink: Symbol('reportLink')
   });
 
   exports.ConversationView = {
-    [priv.backButton]: document.querySelector('.js-back-button'),
+    [priv.backButton]: document.querySelector('.panel-conversation-back-button'),
     [priv.confirmDialog]: document.querySelector('.js-confirmation-dialog'),
+    [priv.reportLink]: document.querySelector('.view-report-link'),
 
     initView() {
       this[priv.confirmDialog].addEventListener('click', (e) => {
@@ -45,8 +47,11 @@
 
       this.initView();
 
-      var content = document.querySelector('.content');
+      var content = document.querySelector('.panel-conversation-content');
       content.textContent = `this is thread ${args.id}`;
+
+      var reportLink = this[priv.reportLink];
+      reportLink.href = reportLink.href.replace('XXX', args.id);
     },
 
     beforeLeave(args) {
