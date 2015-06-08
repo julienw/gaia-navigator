@@ -10,11 +10,13 @@
     <script src='utils.js' defer></script>
     <script src='navigation.js' defer></script>
     <script src='conversation.js' defer></script>
+    <script src='report.js' defer></script>
     <script src='startup.js' defer></script>
 
   </head>
   <body>
-    <section class='panel'>
+    <section class='panel panel-conversation'>
+      <h1>Conversation View</h1>
       <button class='js-back-button back-button'type='button'>Go back</button>
       <label class='inline-checkbox'>
         <input type='checkbox' class='js-should-confirm-checkbox'> with confirmation
@@ -28,6 +30,10 @@
           <button class='js-dialog-choice-no' type='button'>No</button>
         </div>
       </div>
+    </section>
+
+    <section class='panel panel-report'>
+      <h1>Report view</h1>
     </section>
   </body>
 </html>

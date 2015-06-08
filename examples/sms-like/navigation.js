@@ -8,12 +8,19 @@
       name: 'conversation',
       url: 'conversation.html',
       view: 'ConversationView',
-      previous: 'inbox'
+      previous: 'inbox',
+      alsoContains: ['report']
     }),
     Object.freeze({
       name: 'inbox',
       url: 'inbox.html',
       view: 'InboxView'
+    }),
+    Object.freeze({
+      name: 'report',
+      view: 'ReportView',
+      previous: 'conversation',
+      partOf: 'conversation'
     })
   ]);
 
@@ -23,10 +30,42 @@
     gnc_getLocation().assign(url);
   }
 
+  function findViewFromHash(hash) {
+    if (!hash) {
+      return null;
+    }
+
+    if (hash[0] === '#') {
+      hash = hash.slice(1);
+    }
+
+    var index = hash.indexOf('?');
+    if (index !== -1) {
+      hash = hash.slice(0, index);
+    }
+
+    return findViewFromName(hash);
+  }
+
   function findViewFromLocation(location) {
-    return VIEWS.find((object) => {
-      return location.pathname.endsWith('/' + object.url);
-    }) || null;
+    var pathName = location.pathname;
+
+    var viewFromHash = findViewFromHash(location.hash);
+    var viewFromPath = VIEWS.find(
+      (object) => pathName.endsWith('/' + object.url)
+    ) || null;
+
+    if (viewFromHash && viewFromHash.partOf &&
+        viewFromHash.partOf !== viewFromPath.name) {
+      console.error(
+        'The view', viewFromHash.name,
+        'found from the hash', location.hash,
+        'is not part of view', viewFromPath.name
+      );
+      viewFromHash = null;
+    }
+
+    return viewFromHash || viewFromPath;
   }
 
   function findViewFromName(name) {
@@ -53,25 +92,19 @@
     );
   }
 
-  function isFirstNavigationDocument() {
-    return gnc_getHistory().length === 1;
-  }
-
-  function pushMissingDocuments() {
-    var toPush = [currentView];
-    var current = currentView;
-    while (current.previous) {
-      current = findViewFromName(current.previous);
-      toPush.unshift(current);
+  // hides current panel, shows new panel
+  function switchPanel(oldView, newView) {
+    if (oldView) {
+      var oldPanelElement = document.querySelector(`.panel-${oldView.name}`);
+      oldPanelElement.classList.remove('panel-active');
     }
 
-    if (toPush.length) {
-      gnc_getHistory().replaceState(null, null, toPush[0].url);
-
-      toPush.slice(1).forEach((view) => {
-        gnc_getHistory().pushState(null, null, view.url);
-      });
+    if (newView) {
+      var newPanelElement = document.querySelector(`.panel-${newView.name}`);
+      newPanelElement.classList.add('panel-active');
     }
+
+    // TODO: return Etienne's wait for next dom scheduler tick ?
   }
 
   exports.Navigation = {
@@ -83,9 +116,45 @@
 
     go(viewName, args) {
       var view = findViewFromName(viewName);
-      return executeNavigationStep('beforeLeave').then(
-        () => setLocation(view.url)
-      );
+
+      if (view === currentView) {
+        return Promise.resolve();
+      }
+
+      var parentView;
+      var nextLocation = view.url;
+      var hash = '';
+      if (view.partOf) {
+        parentView = findViewFromName(view.partOf);
+        nextLocation = parentView.url;
+        hash = `#!/${viewName}`;
+      }
+      var currentParentView = currentView;
+      if (currentView.partOf) {
+        currentParentView = findViewFromName(currentView.partOf);
+      }
+
+      var beforeLeavePromise = executeNavigationStep('beforeLeave');
+
+      hash = Utils.url(hash, args);
+
+      if (parentView === currentParentView) {
+        // no document change
+        return beforeLeavePromise.then(
+          () => setLocation(hash), currentView = view
+        ).then(
+          () => executeNavigationStep('beforeEnter', args)
+        ).then(
+          () => switchPanel(currentView, view)
+        ).then(
+          () => executeNavigationStep('afterEnter', args)
+        );
+      } else {
+        // document change
+        return beforeLeavePromise.then(
+          () => setLocation(nextLocation + hash)
+        );
+      }
     },
 
     init() {
@@ -94,12 +163,10 @@
         return;
       }
 
-      if (isFirstNavigationDocument()) {
-        pushMissingDocuments();
-      }
-
-      var args = Utils.params(window.location.search);
-      executeNavigationStep('beforeEnter', args);
+      var args = Utils.params(window.location.hash);
+      executeNavigationStep('beforeEnter', args).then(
+        () => switchPanel(null, currentView)
+      );
       attachAfterEnterHandler();
     }
   };
