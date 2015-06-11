@@ -95,7 +95,7 @@
   }
 
   // hides current panel, shows new panel
-  function switchPanel(oldView, newView) {
+  function switchPanel({oldView, newView}) {
     if (oldView) {
       var oldPanelElement = document.querySelector(`.panel-${oldView.name}`);
       oldPanelElement.classList.remove('panel-active');
@@ -120,7 +120,7 @@
     executeNavigationStep('beforeLeave', args).then(
       () => executeNavigationStep('beforeEnter', args)
     ).then(
-      () => switchPanel(oldView, currentView)
+      () => switchPanel({ oldView, newView: currentView })
     ).then(
       () => executeNavigationStep('afterEnter', args)
     );
@@ -175,7 +175,7 @@
         ).then(
           () => executeNavigationStep('beforeEnter', args)
         ).then(
-          () => switchPanel(oldView, view)
+          () => switchPanel({ oldView, newView: view })
         ).then(
           () => executeNavigationStep('afterEnter', args)
         );
@@ -195,7 +195,7 @@
 
       var args = Utils.params(window.location.hash);
       executeNavigationStep('beforeEnter', args).then(
-        () => switchPanel(null, currentView)
+        () => switchPanel({ newView: currentView })
       );
       attachAfterEnterHandler();
       attachHistoryListener();
