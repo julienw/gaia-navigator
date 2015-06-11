@@ -84,13 +84,14 @@
   }
 
   function attachAfterEnterHandler() {
-    window.addEventListener(
-      'navigation-transition-end',
-      function onNavigationEnd() {
-        window.removeEventListener('navigation-transition-end', onNavigationEnd);
-        executeNavigationStep('afterEnter');
-      }
-    );
+    function onNavigationEnd() {
+      window.removeEventListener('navigation-transition-end', onNavigationEnd);
+      window.removeEventListener('load', onNavigationEnd);
+      executeNavigationStep('afterEnter');
+    }
+
+    window.addEventListener('navigation-transition-end', onNavigationEnd);
+    window.addEventListener('load', onNavigationEnd); // simulate navigation end
   }
 
   // hides current panel, shows new panel
