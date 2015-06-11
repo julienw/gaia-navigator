@@ -20,9 +20,6 @@
         }
       });
 
-      this.onBackButtonClicked = this.onBackButtonClicked.bind(this);
-      this.navigateBack = this.navigateBack.bind(this);
-
       document.querySelector('.js-dialog-choice-yes').addEventListener(
         'click', this.navigateBack
       );
@@ -88,4 +85,9 @@
       this[priv.confirmDialog].hidden = false;
     }
   };
+
+  ['onBackButtonClicked', 'navigateBack'].forEach((method) => {
+    ConversationView[method] = ConversationView[method].bind(ConversationView);
+  });
+
 })(window);
