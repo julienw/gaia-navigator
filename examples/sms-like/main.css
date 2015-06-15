@@ -11,8 +11,30 @@
 
   background: white;
   border: 1px solid #888;
+
+  animation: 2s both;
 }
 
 .panel-active {
   display: unset;
+}
+
+.panel-will-activate {
+  animation-name: new-slide-left;
+}
+
+.panel-will-deactivate {
+  animation-name: old-slide-left;
+}
+
+@keyframes new-slide-left {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes old-slide-left {
+  to {
+    transform: translateX(-100%);
+  }
 }

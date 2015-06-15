@@ -94,19 +94,42 @@
     window.addEventListener('load', onNavigationEnd); // simulate navigation end
   }
 
+  function waitForSlideAnimation(panelElement) {
+    var defer = Utils.Promise.defer();
+
+    panelElement.addEventListener('animationend', function onAnimationEnd() {
+      this.removeEventListener('animationend', onAnimationEnd);
+      defer.resolve();
+    });
+
+    return defer.promise;
+  }
+
   // hides current panel, shows new panel
   function switchPanel({oldView, newView}) {
+    var doSlideAnimation = oldView && newView;
+    var isGoingBack = oldView && newView && oldView.previous === newView.name;
+
+    var oldPanelElement = oldView && document.querySelector(`.panel-${oldView.name}`);
+    var newPanelElement = newView && document.querySelector(`.panel-${newView.name}`);
+
+    if (doSlideAnimation) {
+      newPanelElement.classList.add('panel-will-activate', 'panel-active');
+      oldPanelElement.classList.add('panel-will-deactivate');
+
+      return waitForSlideAnimation(newPanelElement).then(() => {
+        oldPanelElement.classList.remove('panel-will-deactivate', 'panel-active');
+        newPanelElement.classList.remove('panel-will-activate');
+      });
+    }
+
     if (oldView) {
-      var oldPanelElement = document.querySelector(`.panel-${oldView.name}`);
       oldPanelElement.classList.remove('panel-active');
     }
 
     if (newView) {
-      var newPanelElement = document.querySelector(`.panel-${newView.name}`);
       newPanelElement.classList.add('panel-active');
     }
-
-    // TODO: return Etienne's wait for next dom scheduler tick ?
   }
 
   function onPopState(e) {
