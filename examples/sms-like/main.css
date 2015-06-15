@@ -12,7 +12,7 @@
   background: white;
   border: 1px solid #888;
 
-  animation: 0.5s both linear;
+  animation: .5s both linear;
   transform-origin: top;
 }
 

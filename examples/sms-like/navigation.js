@@ -94,15 +94,21 @@
     window.addEventListener('load', onNavigationEnd); // simulate navigation end
   }
 
+  var previousAnimationDefer;
   function waitForSlideAnimation(panelElement) {
+    if (previousAnimationDefer) {
+      previousAnimationDefer.reject(new Error('A new animation started'));
+    }
+
     var defer = Utils.Promise.defer();
+    previousAnimationDefer = defer;
 
     panelElement.addEventListener('animationend', function onAnimationEnd() {
       this.removeEventListener('animationend', onAnimationEnd);
       defer.resolve();
     });
 
-    return defer.promise;
+    return defer.promise.then(() => previousAnimationDefer = null);
   }
 
   // hides current panel, shows new panel
@@ -121,7 +127,10 @@
       oldPanelElement.classList.toggle('panel-animation-back', isGoingBack);
 
       return waitForSlideAnimation(newPanelElement).then(() => {
-        oldPanelElement.classList.remove('panel-will-deactivate', 'panel-active', 'panel-animation-back');
+        oldPanelElement.classList.remove('panel-will-activate', 'panel-will-deactivate', 'panel-active', 'panel-animation-back');
+        newPanelElement.classList.remove('panel-will-deactivate', 'panel-will-activate', 'panel-animation-back');
+      }, () => {
+        oldPanelElement.classList.remove('panel-will-deactivate', 'panel-animation-back');
         newPanelElement.classList.remove('panel-will-activate', 'panel-animation-back');
       });
     }
