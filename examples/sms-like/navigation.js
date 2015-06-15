@@ -117,9 +117,12 @@
       newPanelElement.classList.add('panel-will-activate', 'panel-active');
       oldPanelElement.classList.add('panel-will-deactivate');
 
+      newPanelElement.classList.toggle('panel-animation-back', isGoingBack);
+      oldPanelElement.classList.toggle('panel-animation-back', isGoingBack);
+
       return waitForSlideAnimation(newPanelElement).then(() => {
-        oldPanelElement.classList.remove('panel-will-deactivate', 'panel-active');
-        newPanelElement.classList.remove('panel-will-activate');
+        oldPanelElement.classList.remove('panel-will-deactivate', 'panel-active', 'panel-animation-back');
+        newPanelElement.classList.remove('panel-will-activate', 'panel-animation-back');
       });
     }
 
