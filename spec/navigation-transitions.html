@@ -1,0 +1,1715 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  
+  
+  <title>Web Navigation Transitions</title>
+  
+  
+  <style data-fill-with="stylesheet">  body {
+    color: black;
+    font-family: sans-serif;
+    margin: 0 auto;
+    max-width: 50em;
+    padding: 2em 1em 2em 70px;
+  }
+  :link { color: #00C; background: transparent }
+  :visited { color: #609; background: transparent }
+  a[href]:active { color: #C00; background: transparent }
+  a[href]:hover { background: #ffa }
+
+  a[href] img { border-style: none }
+
+  h1, h2, h3, h4, h5, h6 { text-align: left }
+  h1, h2, h3 { color: #005A9C; }
+  h1 { font: 170% sans-serif }
+  h2 { font: 140% sans-serif }
+  h3 { font: 120% sans-serif }
+  h4 { font: bold 100% sans-serif }
+  h5 { font: italic 100% sans-serif }
+  h6 { font: small-caps 100% sans-serif }
+
+  .hide { display: none }
+
+  div.head { margin-bottom: 1em }
+  div.head h1 { margin-top: 2em; clear: both }
+  div.head table { margin-left: 2em; margin-top: 2em }
+
+  p.copyright { font-size: small }
+  p.copyright small { font-size: small }
+
+  pre { margin-left: 2em }
+  dt { font-weight: bold }
+
+  ul.toc, ol.toc {
+    list-style: none;
+  }
+
+  body {
+    counter-reset: exampleno figure issue;
+    max-width: 50em;
+    margin: 0 auto !important;
+    line-height: 1.5;
+  }
+
+/******************************************************************************/
+/*                                Sectioning                                  */
+/******************************************************************************/
+
+/** Headings ******************************************************************/
+
+  h1, h2, h3, h4, h5, h6, dt {
+    page-break-after: avoid;
+  }
+
+  h2, h3, h5, h6 {
+    margin-top: 3em;
+  }
+  h4 {
+     margin-top: 4em;
+  }
+
+/** Subheadings ***************************************************************/
+
+  h1 + h2,
+  #subtitle + h2 {
+    /* #subtitle is a subtitle in an H2 under the H1 */
+    margin-top: 0;
+  }
+  h2 + h3,
+  h3 + h4,
+  h4 + h5,
+  h5 + h6 {
+    margin-top: 1.2em; /* = 1 x line-height */
+  }
+
+/** Section divider ***********************************************************/
+  /* <hr> used to separate TMI into the second half of a section              */
+  hr:not([title]) {
+    font-size: 1.5em;
+    text-align: center;
+    margin: 1em auto;
+    height: auto;
+    border: transparent solid 0;
+    background: transparent;
+  }
+  hr:not([title])::before {
+    content: "\1F411\2003\2003\1F411\2003\2003\1F411";
+  }
+  /* note: <hr> with title separates document header from contents */
+
+/******************************************************************************/
+/*                            Paragraphs and Lists                            */
+/******************************************************************************/
+
+  p {
+    margin: 1em 0;
+  }
+  dd     > p:first-child,
+  li     > p:first-child {
+    margin-top: 0;
+  }
+
+  ul, ol {
+    margin-left: 0;
+    padding-left: 2em;
+  }
+  li {
+    margin: 0.25em 2em 0.5em 0;
+    padding-left: 0;
+  }
+
+  dl dd {
+    margin: 0 0 1em 2em;
+  }
+  .head dd {
+    margin-bottom: 0;
+  }
+
+  /* Style for algorithms */
+  ol.algorithm ol {
+   border-left: 1px solid #90b8de;
+   margin-left: 1em;
+  }
+  ol.algorithm ol.algorithm {
+   border-left: none;
+   margin-left: 0;
+  }
+
+  /* Style for switch/case <dl>s */
+  dl.switch > dd > ol.only {
+   margin-left: 0;
+  }
+  dl.switch > dd > ol.algorithm {
+   margin-left: -2em;
+  }
+  dl.switch {
+   padding-left: 2em;
+  }
+  dl.switch > dt {
+   text-indent: -1.5em;
+   margin-top: 1em;
+  }
+  dl.switch > dt + dt {
+   margin-top: 0;
+  }
+  dl.switch > dt:before {
+   content: '\21AA';
+   padding: 0 0.5em 0 0;
+   display: inline-block;
+   width: 1em;
+   text-align: right;
+   line-height: 0.5em;
+  }
+
+  /* Style for paragraphs I know are in MD-genned lists */
+  [data-md] > :first-child {
+    margin-top: 0;
+  }
+  [data-md] > :last-child {
+    margin-bottom: 0;
+  }
+
+/** Inline Lists **************************************************************/
+  /* This is mostly to make the list inside the CR exit criteria more compact. */
+
+  ol.inline, ol.inline li {
+    display: inline;
+    padding: 0; margin: 0;
+  }
+  ol.inline {
+    counter-reset: list-item;
+  }
+  ol.inline li {
+    counter-increment: list-item;
+  }
+  ol.inline li:before {
+    content: "(" counter(list-item) ") ";
+    font-weight: bold;
+  }
+
+/** Terminology Markup ********************************************************/
+
+
+/******************************************************************************/
+/*                                 Inline Markup                              */
+/******************************************************************************/
+
+/** Terminology Markup ********************************************************/
+  dfn   { /* Defining instance */
+    font-weight: bolder;
+  }
+  a > i { /* Instance of term */
+    font-style: normal;
+  }
+  dt dfn code, code.idl {
+    font-size: inherit;
+  }
+  dfn var {
+    font-style: normal;
+  }
+
+/** Change Marking ************************************************************/
+
+  del { color: red;  text-decoration: line-through; }
+  ins { color: #080; text-decoration: underline;    }
+
+/** Miscellaneous improvements to inline formatting ***************************/
+
+  sup {
+    vertical-align: super;
+    font-size: 80%
+  }
+
+/******************************************************************************/
+/*                                    Code                                    */
+/******************************************************************************/
+
+/** General monospace/pre rules ***********************************************/
+
+  pre, code {
+    font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    font-size: .9em;
+    page-break-inside: avoid;
+  }
+  pre {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    overflow: auto;
+  }
+
+/** Syntax-Highlighted Code ***************************************************/
+
+  .example pre[class*="language-"],
+  .example [class*="language-"] pre,
+  .example pre[class*="lang-"],
+  .example [class*="lang-"] pre {
+    background: transparent; /* Prism applies a gray background that doesn't work well in the template. */
+  }
+
+/** Example Code **************************************************************/
+
+  div.html, div.xml,
+  pre.html, pre.xml {
+    padding: 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+    color: #600;
+  }
+  pre.example,
+  pre.html,
+  pre.xml {
+    padding-top: 1.5em;
+  }
+
+  pre.illegal, .illegal pre
+  pre.deprecated, .deprecated pre {
+    color: red;
+  }
+
+/** IDL fragments *************************************************************/
+
+  pre.idl {
+    /* Match blue propdef boxes */
+    padding: .5em 1em;
+    background: #DEF;
+    margin: 1.2em 0;
+    border-left: 0.5em solid #8CCBF2;
+  }
+  pre.idl :link, pre.idl :visited {
+    color:inherit;
+    background:transparent;
+  }
+
+/** Inline CSS fragments ******************************************************/
+
+  .css.css, .property.property, .descriptor.descriptor {
+    color: #005a9c;
+    font-size: inherit;
+    font-family: inherit;
+  }
+  .css::before, .property::before, .descriptor::before {
+    content: "‘";
+  }
+  .css::after, .property::after, .descriptor::after {
+    content: "’";
+  }
+  .property, .descriptor {
+    /* Don't wrap property and descriptor names */
+    white-space: nowrap;
+  }
+  .type { /* CSS value <type> */
+  font-style: italic;
+  }
+  pre .property::before, pre .property::after {
+    content: "";
+  }
+
+/** Inline markup fragments ***************************************************/
+
+  code.html, code.xml {
+    color: #660000;
+  }
+
+/** Autolinks produced using Bikeshed *****************************************/
+
+  [data-link-type="property"]::before,
+  [data-link-type="propdesc"]::before,
+  [data-link-type="descriptor"]::before,
+  [data-link-type="value"]::before,
+  [data-link-type="function"]::before,
+  [data-link-type="at-rule"]::before,
+  [data-link-type="selector"]::before,
+  [data-link-type="maybe"]::before {
+    content: "‘";
+  }
+  [data-link-type="property"]::after,
+  [data-link-type="propdesc"]::after,
+  [data-link-type="descriptor"]::after,
+  [data-link-type="value"]::after,
+  [data-link-type="function"]::after,
+  [data-link-type="at-rule"]::after,
+  [data-link-type="selector"]::after,
+  [data-link-type="maybe"]::after {
+    content: "’";
+  }
+
+  [data-link-type].production::before,
+  [data-link-type].production::after,
+  .prod [data-link-type]::before,
+  .prod [data-link-type]::after {
+    content: "";
+  }
+
+  [data-link-type=element]         { font-family: monospace; }
+  [data-link-type=element]::before { content: "<" }
+  [data-link-type=element]::after  { content: ">" }
+
+  [data-link-type=biblio] {
+    white-space: pre;
+  }
+
+
+/******************************************************************************/
+/*                                    Links                                   */
+/******************************************************************************/
+
+/** General Hyperlinks ********************************************************/
+
+  /* We hyperlink a lot, so make it less intrusive */
+  a:link, a:visited {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid silver;
+  }
+  @supports (text-decoration-color: silver) {
+    a:link, a:visited {
+      border-bottom: none;
+      text-decoration: underline;
+      text-decoration-color: silver;
+    }
+    a:visited {
+      text-decoration-style: dotted;
+    }
+  }
+
+  a.logo:link, a.logo:visited { /* backout above styling for W3C logo */
+    padding: 0;
+    border: none;
+    text-decoration: none;
+  }
+
+/** Self-Links ****************************************************************/
+  /* Auto-generated links from an element to its own anchor, for usability */
+
+  .heading, .issue, .note, .example, li, dt {
+    position: relative;
+  }
+  a.self-link {
+    position: absolute;
+    top: 0;
+    left: -2.5em;
+    width: 2em;
+    height: 2em;
+    text-align: center;
+    border: none;
+    transition: opacity .2s;
+    opacity: .5;
+  }
+  a.self-link:hover {
+    opacity: 1;
+  }
+  .heading > a.self-link {
+    font-size: 83%;
+  }
+  li > a.self-link {
+    left: -3.5em;
+  }
+  dfn > a.self-link {
+    top: auto;
+    left: auto;
+    opacity: 0;
+    width: 1.5em;
+    height: 1.5em;
+    background: gray;
+    color: white;
+    font-style: normal;
+    transition: opacity .2s, background-color .2s, color .2s;
+  }
+  dfn:hover > a.self-link {
+    opacity: 1;
+  }
+  dfn > a.self-link:hover {
+    color: black;
+  }
+
+  a.self-link::before            { content: "¶"; }
+  .heading > a.self-link::before { content: "§"; }
+  dfn > a.self-link::before      { content: "#"; }
+
+/******************************************************************************/
+/*                                    Images                                  */
+/******************************************************************************/
+
+  img {
+    border-style: none;
+    color: white;
+  }
+
+  figure, div.figure, div.sidefigure {
+    page-break-inside: avoid;
+  }
+
+  div.figure, p.figure, div.sidefigure, figure {
+    text-align: center;
+    margin: 2.5em 0;
+  }
+  div.figure pre, div.sidefigure pre, figure pre {
+    text-align: left;
+    display: table;
+    margin: 1em auto;
+  }
+  .figure table, figure table {
+    margin: auto;
+  }
+  div.sidefigure, figure.sidefigure {
+    float: right;
+    width: 50%;
+    margin: 0 0 0.5em 0.5em
+  }
+  div.figure img, div.sidefigure img, figure img,
+  div.figure object, div.sidefigure object, figure object {
+    display: block;
+    margin: auto;
+    max-width: 100%
+  }
+  p.caption, figcaption, caption {
+    text-align: center;
+    font-style: italic;
+    font-size: 90%;
+  }
+  p.caption:before, figcaption:before {
+    content: "Figure " counter(figure) ". ";
+    font-weight: bold;
+  }
+  p.caption, figcaption {
+    counter-increment: figure;
+  }
+
+  /* DL list is indented 2em, but figure inside it is not */
+  dd > div.figure, dd > figure { margin-left: -2em }
+
+  pre.ascii-art {
+    display: table; /* shrinkwrap */
+    margin: 1em auto;
+  }
+
+  /* Displaying the output of text layout, particularly when
+     line-breaking is being invoked, and thus having a
+     visible width is good. */
+  pre.output {
+    margin: 1em;
+    border: solid thin silver;
+    padding: 0.25em;
+    display: table;
+  }
+
+/******************************************************************************/
+/*                             Colored Boxes                                  */
+/******************************************************************************/
+
+  .issue, .note, .example, .why, .advisement, blockquote {
+    padding: .5em;
+    border: .5em;
+    border-left-style: solid;
+    page-break-inside: avoid;
+  }
+  span.issue, span.note {
+    padding: .1em .5em .15em;
+    border-right-style: solid;
+  }
+
+  div.issue,
+  div.note,
+  div.example,
+  details.why,
+  blockquote {
+    margin: 1em auto;
+  }
+  .note  > p:first-child,
+  .issue > p:first-child,
+  blockquote > :first-child {
+    margin-top: 0;
+  }
+  blockquote > :last-child {
+    margin-bottom: 0;
+  }
+
+/** Blockquotes ***************************************************************/
+
+  blockquote {
+    border-color: silver;
+  }
+
+/** Open issue ****************************************************************/
+  /* not intended for CR+ publication */
+
+  .issue {
+    border-color: #E05252;
+    background: #FBE9E9;
+    counter-increment: issue;
+    overflow: auto;
+  }
+  .issue:before {
+    content: "Issue " counter(issue);
+    padding-right: 1em;
+    text-transform: uppercase;
+    color: #E05252;
+  }
+
+/** Example *******************************************************************/
+
+  .example {
+    border-color: #E0CB52;
+    background: #FCFAEE;
+    counter-increment: exampleno;
+    overflow: auto;
+    clear: both;
+  }
+  .example:before {
+    color: #B9AB2D;
+    font-family: sans-serif;
+  }
+  .example:before {
+    content: "Example";
+    content: "Example " counter(exampleno);
+    min-width: 7.5em;
+    text-transform: uppercase;
+    display: block;
+  }
+  .illegal.example:before,
+  .illegal.example:before {
+    content: "Invalid Example";
+    content: "Invalid Example" counter(exampleno);
+    color: red;
+  }
+
+/** Non-normative Note ********************************************************/
+
+  .note, .why {
+    border-color: #52E052;
+    background: #E9FBE9;
+    overflow: auto;
+  }
+
+/** Advisement Box ************************************************************/
+  /*  for attention-grabbing normative statements */
+
+  .advisement {
+    border-color: orange;
+    border-style: none solid;
+    background: #FFEECC;
+    text-align: center;
+  }
+  strong.advisement {
+    display: block;
+  }
+  /*.advisement:before { color: #FF8800; } */
+
+/** ??? ***********************************************************************/
+
+  details.why {
+    border-color: #52E052;
+    background: #E9FBE9;
+    display: block;
+  }
+
+  details.why > summary {
+    font-style: italic;
+    display: block;
+  }
+
+  details.why[open] > summary {
+    border-bottom: 1px silver solid;
+  }
+
+/** Spec Obsoletion Notice ****************************************************/
+  /* obnoxious obsoletion notice for older/abandoned specs. */
+
+  details.annoying-warning {
+    display: block;
+  }
+
+  details.annoying-warning[open] {
+    background: #fdd;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    padding: .5em;
+    border: thick solid red;
+    border-radius: 1em;
+  }
+@media not print {
+  details.annoying-warning[open] {
+    position: fixed;
+    left: 1em;
+    right: 1em;
+    bottom: 1em;
+    z-index: 1000;
+  }
+}
+
+  details.annoying-warning:not([open]) > summary {
+    background: #fdd;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    padding: .5em;
+  }
+
+/******************************************************************************/
+/*                                    Tables                                  */
+/******************************************************************************/
+
+/** Property/Descriptor Definition Tables *************************************/
+
+  table.propdef, table.propdef-extra,
+  table.descdef, table.definition-table {
+    page-break-inside: avoid;
+    width: 100%;
+    margin: 1.2em 0;
+    border-left: 0.5em solid #8CCBF2;
+    padding: 0.5em 1em;
+    background: #DEF;
+    border-spacing: 0;
+  }
+
+  table.propdef td, table.propdef-extra td,
+  table.descdef td, table.definition-table td,
+  table.propdef th, table.propdef-extra th,
+  table.descdef th, table.definition-table th {
+    padding: 0.5em;
+    vertical-align: baseline;
+    border-bottom: 1px solid #bbd7e9;
+  }
+  table.propdef > tbody > tr:last-child th,
+  table.propdef-extra > tbody > tr:last-child th,
+  table.descdef > tbody > tr:last-child th,
+  table.definition-table > tbody > tr:last-child th,
+  table.propdef > tbody > tr:last-child td,
+  table.propdef-extra > tbody > tr:last-child td,
+  table.descdef > tbody > tr:last-child td,
+  table.definition-table > tbody > tr:last-child td {
+    border-bottom: 0;
+  }
+
+  table.propdef th,
+  table.propdef-extra th,
+  table.descdef th,
+  table.definition-table th {
+    font-style: italic;
+    font-weight: normal;
+    width: 8.3em;
+    padding-left: 1em;
+  }
+
+  /* For when values are extra-complex and need formatting for readability */
+  table td.pre {
+    white-space: pre-wrap;
+  }
+
+  /* A footnote at the bottom of a propdef */
+  table.propdef td.footnote,
+  table.propdef-extra td.footnote,
+  table.descdef td.footnote,
+  table.definition-table td.footnote {
+    padding-top: 0.6em;
+  }
+  table.propdef td.footnote:before,
+  table.propdef-extra td.footnote:before,
+  table.descdef td.footnote:before,
+  table.definition-table td.footnote:before {
+    content: " ";
+    display: block;
+    height: 0.6em;
+    width: 4em;
+    border-top: thin solid;
+  }
+
+/** Profile Tables ************************************************************/
+  /* table of required features in a CSS profile */
+
+  table.features th {
+    background: #00589f;
+    color: #fff;
+    text-align: left;
+    padding: 0.2em 0.2em 0.2em 0.5em;
+  }
+  table.features td {
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+    padding: 0.3em 0.3em 0.3em 0.7em;
+  }
+
+/** Data tables (and properly marked-up proptables) ***************************/
+  /*
+     <table class="data"> highlights structural relationships in a table
+     when correct markup is used (e.g. thead/tbody, th vs. td, scope attribute)
+
+     Use class="complex data" for particularly complicated tables --
+     (This will draw more lines: busier, but clearer.)
+
+     Use class="long" on table cells with paragraph-like contents
+     (This will adjust text alignment accordingly.)
+  */
+
+  .data, .proptable {
+    margin: 1em auto;
+    border-collapse: collapse;
+    width: 100%;
+    border: hidden;
+  }
+  .data {
+    text-align: center;
+    width: auto;
+  }
+  .data caption {
+    width: 100%;
+  }
+
+  .data td, .data th,
+  .proptable td, .proptable th {
+    padding: 0.5em;
+    border-width: 1px;
+    border-color: silver;
+    border-top-style: solid;
+  }
+
+  .data thead td:empty {
+    padding: 0;
+    border: 0;
+  }
+
+  .data thead th[scope="row"],
+  .proptable thead th[scope="row"] {
+    text-align: right;
+    color: inherit;
+  }
+
+  .data thead,
+  .proptable thead,
+  .data tbody,
+  .proptable tbody {
+    color: inherit;
+    border-bottom: 2px solid;
+  }
+
+  .data colgroup {
+    border-left: 2px solid;
+  }
+
+  .data tbody th:first-child,
+  .proptable tbody th:first-child ,
+  .data tbody td[scope="row"]:first-child,
+  .proptable tbody td[scope="row"]:first-child {
+    text-align: right;
+    color: inherit;
+    border-right: 2px solid;
+    border-top: 1px solid silver;
+    padding-right: 1em;
+  }
+  .data.define td:last-child {
+    text-align: left;
+  }
+
+  .data tbody th[rowspan],
+  .proptable tbody th[rowspan],
+  .data tbody td[rowspan],
+  .proptable tbody td[rowspan]{
+    border-left:  1px solid silver;
+    border-right: 1px solid silver;
+  }
+
+  .complex.data th,
+  .complex.data td {
+    border: 1px solid silver;
+  }
+
+  .data td.long {
+   vertical-align: baseline;
+   text-align: left;
+  }
+
+  .data img {
+    vertical-align: middle;
+  }
+
+
+/******************************************************************************/
+/*                                  Indices                                   */
+/******************************************************************************/
+
+
+/** Table of Contents *********************************************************/
+
+  /* ToC not indented, but font style shows hierarchy */
+  ul.toc           { margin: 1em 0;     font-weight: bold; /*text-transform: uppercase;*/ }
+  ul.toc ul        { margin: 0;        font-weight: normal; text-transform: none; }
+  ul.toc ul ul     { margin: 0 0 0 2em; font-style: italic; }
+  ul.toc ul ul ul  { margin: 0; }
+  ul.toc > li      { margin: 1.5em 0; }
+  ul.toc ul.toc li { margin: 0.3em 0 0 0; }
+
+  ul.toc, ul.toc ul, ul.toc li { padding: 0; line-height: 1.3; }
+  ul.toc a { text-decoration: none; border-bottom-style: none; }
+  ul.toc a:hover, ul.toc a:focus  { border-bottom-style: solid; }
+  @supports (text-decoration-style: solid) {
+    ul.toc a:hover, ul.toc a:focus  {
+      border-bottom-style: none;
+      text-decoration-style: solid;
+    }
+  }
+  /*
+  ul.toc li li li, ul.toc li li li ul {margin-left: 0; display: inline}
+  ul.toc li li li ul, ul.toc li li li ul li {margin-left: 0; display: inline}
+  */
+
+  /* Section numbers in a column of their own */
+  ul.toc {
+    margin-left: 5em
+  }
+  ul.toc span.secno {
+    float: left;
+    width: 4em;
+    margin-left: -5em;
+  }
+  ul.toc ul ul span.secno {
+    margin-left: -7em;
+  }
+  /*ul.toc span.secno {text-align: right}*/
+  ul.toc li {
+    clear: both;
+  }
+  /* If we had 'tab', floats would not be needed here:
+     ul.toc span.secno {tab: 5em right; margin-right: 1em}
+     ul.toc li {text-indent: 5em hanging}
+   The second line in case items wrap
+  */
+
+/** At-risk List **************************************************************/
+  /* Style for At Risk features (intended as editorial aid, not intended for publishing) */
+
+  .atrisk::before {
+   float: right;
+   margin-top: -0.25em;
+   padding: 0.5em 1em 0.5em 0;
+   text-indent: -0.9em;
+   border: 1px solid;
+   content: '\25C0    Not yet widely implemented';
+   white-space: pre;
+   font-size: small;
+   background-color: white;
+   color: gray;
+   text-align: center;
+  }
+
+  .toc .atrisk::before { content:none }
+
+/** Index *********************************************************************/
+
+  /* Index Lists: Layout */
+  ul.indexlist       { margin-left: 0; columns: 13em; }
+  ul.indexlist li    { margin-left: 0; list-style: none }
+  ul.indexlist li li { margin-left: 1em }
+  ul.indexlist dl    { margin-top: 0; }
+  ul.indexlist dt    { margin: .2em 0 .2em 20px;}
+  ul.indexlist dd    { margin: .2em 0 .2em 40px;}
+  /* Index Lists: Typography */
+  ul.indexlist ul,
+  ul.indexlist dl { font-size: smaller; }
+  ul.indexlist a  { font-weight: bold; }
+
+/** Property Index Tables *****************************************************/
+  /* See also the data table styling section, which this effectively subclasses */
+
+  table.proptable {
+    font-size: small;
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: left;
+    margin: 1em 0;
+  }
+
+  table.proptable td,
+  table.proptable th {
+    padding: 0.4em;
+    text-align: center;
+  }
+
+  table.proptable tr:hover td {
+    background: #DEF;
+  }
+  .propdef th {
+    font-style: italic;
+    font-weight: normal;
+    text-align: left;
+    width: 3em;
+  }
+  /* The link in the first column in the property table (formerly a TD) */
+  table.proptable td .property,
+  table.proptable th .property {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+  }
+
+/******************************************************************************/
+/*                                    Print                                   */
+/******************************************************************************/
+
+  @media print {
+    html {
+      margin: 0 !important; }
+    body {
+      font-family: serif; }
+    th, td {
+      font-family: inherit; }
+    a {
+      color: inherit !important; }
+
+    a:link, a:visited {
+      text-decoration: none !important }
+    a:link:after, a:visited:after { /* create a cross-ref "see..." */ }
+    .example:before {
+      font-family: serif !important; }
+  }
+  @page {
+    margin: 1.5cm 1.1cm;
+  }
+
+</style>
+  
+
+  <meta content="Bikeshed 1.0.0" name="generator">
+  <style>.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #ffffff; }
+.highlight .c { color: #708090 } /* Comment */
+.highlight .k { color: #990055 } /* Keyword */
+.highlight .l { color: #669900 } /* Literal */
+.highlight .n { color: #0077aa } /* Name */
+.highlight .o { color: #999999 } /* Operator */
+.highlight .p { color: #999999 } /* Punctuation */
+.highlight .cm { color: #708090 } /* Comment.Multiline */
+.highlight .cp { color: #708090 } /* Comment.Preproc */
+.highlight .c1 { color: #708090 } /* Comment.Single */
+.highlight .cs { color: #708090 } /* Comment.Special */
+.highlight .kc { color: #990055 } /* Keyword.Constant */
+.highlight .kd { color: #990055 } /* Keyword.Declaration */
+.highlight .kn { color: #990055 } /* Keyword.Namespace */
+.highlight .kp { color: #990055 } /* Keyword.Pseudo */
+.highlight .kr { color: #990055 } /* Keyword.Reserved */
+.highlight .kt { color: #990055 } /* Keyword.Type */
+.highlight .ld { color: #669900 } /* Literal.Date */
+.highlight .m { color: #990055 } /* Literal.Number */
+.highlight .s { color: #669900 } /* Literal.String */
+.highlight .na { color: #0077aa } /* Name.Attribute */
+.highlight .nc { color: #0077aa } /* Name.Class */
+.highlight .no { color: #0077aa } /* Name.Constant */
+.highlight .nd { color: #0077aa } /* Name.Decorator */
+.highlight .ni { color: #0077aa } /* Name.Entity */
+.highlight .ne { color: #0077aa } /* Name.Exception */
+.highlight .nf { color: #0077aa } /* Name.Function */
+.highlight .nl { color: #0077aa } /* Name.Label */
+.highlight .nn { color: #0077aa } /* Name.Namespace */
+.highlight .py { color: #0077aa } /* Name.Property */
+.highlight .nt { color: #0077aa } /* Name.Tag */
+.highlight .nv { color: #0077aa } /* Name.Variable */
+.highlight .ow { color: #999999 } /* Operator.Word */
+.highlight .mb { color: #990055 } /* Literal.Number.Bin */
+.highlight .mf { color: #990055 } /* Literal.Number.Float */
+.highlight .mh { color: #990055 } /* Literal.Number.Hex */
+.highlight .mi { color: #990055 } /* Literal.Number.Integer */
+.highlight .mo { color: #990055 } /* Literal.Number.Oct */
+.highlight .sb { color: #669900 } /* Literal.String.Backtick */
+.highlight .sc { color: #669900 } /* Literal.String.Char */
+.highlight .sd { color: #669900 } /* Literal.String.Doc */
+.highlight .s2 { color: #669900 } /* Literal.String.Double */
+.highlight .se { color: #669900 } /* Literal.String.Escape */
+.highlight .sh { color: #669900 } /* Literal.String.Heredoc */
+.highlight .si { color: #669900 } /* Literal.String.Interpol */
+.highlight .sx { color: #669900 } /* Literal.String.Other */
+.highlight .sr { color: #669900 } /* Literal.String.Regex */
+.highlight .s1 { color: #669900 } /* Literal.String.Single */
+.highlight .ss { color: #669900 } /* Literal.String.Symbol */
+.highlight .vc { color: #0077aa } /* Name.Variable.Class */
+.highlight .vg { color: #0077aa } /* Name.Variable.Global */
+.highlight .vi { color: #0077aa } /* Name.Variable.Instance */
+.highlight .il { color: #990055 } /* Literal.Number.Integer.Long */
+        .highlight { background: hsl(24, 20%, 95%); }
+        pre.highlight { padding: 1em; margin: .5em 0; overflow: auto; }
+        :not(pre).highlight { padding: .1em; border-radius: .3em; }
+        </style>
+ </head>
+ 
+
+ <body class="h-entry">
+
+  <div class="head">
+  
+   <p data-fill-with="logo"></p>
+  
+   <h1 class="p-name no-ref" id="title">Web Navigation Transitions</h1>
+  
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft,
+    <time class="dt-updated" datetime="2015-06-29">29 June 2015</time></span></h2>
+  
+   <div data-fill-with="spec-metadata">
+    <dl>
+     <dt>This version:
+     <dd><a class="u-url" href="http://chrislord.net/files/mozilla/gaia-navigator/spec/navigation-transitions.html">http://chrislord.net/files/mozilla/gaia-navigator/spec/navigation-transitions.html</a>
+     <dt class="editor">Editor:
+     <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:clord@mozilla.com">Chris Lord</a> (<span class="p-org org">Mozilla</span>)
+    </dl>
+   </div>
+  
+   <div data-fill-with="warning"></div>
+  
+   <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" src="https://licensebuttons.net/p/zero/1.0/80x15.png"></a>
+To the extent possible under law, the editors have waived all copyright
+and related or neighboring rights to this work.
+In addition, as of 29 June 2015,
+the editors have made this specification available under the
+<a href="http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
+which is available at http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
+Parts of this work may be from another specification document.  If so, those parts are instead covered by the license of that specification document.
+</p>
+  
+   <hr title="Separator for header">
+</div>
+
+
+  <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
+
+  <div class="p-summary" data-fill-with="abstract">
+   <p>This specification describes a mechanism that allows animations to be performed between page navigations using style sheets, and optionally, JavaScript.</p>
+
+</div>
+
+  <div data-fill-with="at-risk"></div>
+
+
+  <h2 class="no-num no-toc no-ref heading settled" id="contents"><span class="content">Table of Contents</span></h2>
+
+  <div data-fill-with="table-of-contents" role="navigation">
+   <ul class="toc" role="directory">
+    <li><a href="#introduction"><span class="secno">1</span> <span class="content">Introduction</span></a>
+     <ul class="toc">
+      <li><a href="#use-cases"><span class="secno">1.1</span> <span class="content">Use cases</span></a>
+     </ul>
+    <li><a href="#atnavigation-transition-rule"><span class="secno">2</span> <span class="content">The <span>@navigation-transition</span> rule</span></a>
+     <ul class="toc">
+      <li><a href="#syntax"><span class="secno">2.1</span> <span class="content">Syntax</span></a>
+       <ul class="toc">
+        <li><a href="#navigation-transition-type"><span class="secno">2.1.1</span> <span class="content">navigation-transition-type</span></a>
+        <li><a href="#navigation-transition-duration"><span class="secno">2.1.2</span> <span class="content">navigation-transition-duration</span></a>
+        <li><a href="#navigation-transition-start"><span class="secno">2.1.3</span> <span class="content">navigation-transition-start</span></a>
+        <li><a href="#navigation-transition-z-index"><span class="secno">2.1.4</span> <span class="content">navigation-transition-z-index</span></a>
+       </ul>
+     </ul>
+    <li><a href="#starting"><span class="secno">3</span> <span class="content">Starting navigation transitions</span></a>
+     <ul class="toc">
+      <li><a href="#multiple-transitions"><span class="secno">3.1</span> <span class="content">Multiple navigation transitions</span></a>
+      <li><a href="#navigating-backwards"><span class="secno">3.2</span> <span class="content">Navigating backwards</span></a>
+      <li><a href="#interrupting-transitions"><span class="secno">3.3</span> <span class="content">Interrupting a navigation transition</span></a>
+     </ul>
+    <li><a href="#navigation-transitions-cssom"><span class="secno">4</span> <span class="content">CSSOM</span></a>
+    <li><a href="#navigation-transition-events"><span class="secno">5</span> <span class="content">Navigation transition events</span></a>
+     <ul class="toc">
+      <li><a href="#interface-navigation-transition-event"><span class="secno">5.1</span> <span class="content">The <code>NavigationTransitionEvent</code> interface</span></a>
+       <ul class="toc">
+        <li><a href="#interface-navigation-transition-event-idl"><span class="secno">5.1.1</span> <span class="content">IDL Definition</span></a>
+        <li><a href="#interface-navigation-transition-event-attributes"><span class="secno">5.1.2</span> <span class="content">Attributes</span></a>
+       </ul>
+      <li><a href="#event-navigation-transition-event"><span class="secno">5.2</span> <span class="content">Types of <code>NavigationTransitionEvent</code></span></a>
+      <li><a href="#navigation-transitions-event-ordering"><span class="secno">5.3</span> <span class="content">Ordering</span></a>
+     </ul>
+    <li><a href="#conformance"><span class="secno"></span> <span class="content">
+Conformance</span></a>
+    <li><a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
+     <ul class="toc">
+      <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
+      <li><a href="#index-defined-elsewhere"><span class="secno"></span> <span class="content">Terms defined by reference</span></a>
+     </ul>
+    <li><a href="#references"><span class="secno"></span> <span class="content">References</span></a>
+     <ul class="toc">
+      <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
+     </ul>
+    <li><a href="#property-index"><span class="secno"></span> <span class="content">Property Index</span></a>
+     <ul class="toc">
+      <li><a href="#navigation-transition-descriptor-table"><span class="secno"></span> <span class="content"><span>@navigation-transition</span> Descriptors</span></a>
+     </ul>
+    <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
+   </ul></div>
+
+  <main>
+
+
+
+
+   <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
+
+
+   <p>Web Navigation Transitions defines an interface and behaviour that allows animations to be performed when the user agent navigates from one location to another. This animation can involve both the existing document and the new document, allowing for transitions that visually involve both documents simultaneously.</p>
+
+
+   <h3 class="heading settled" data-level="1.1" id="use-cases"><span class="secno">1.1. </span><span class="content">Use cases</span><a class="self-link" href="#use-cases"></a></h3>
+
+
+   <p>The use cases for the specification include the following:</p>
+
+
+   <dl>
+    <dt data-md="">
+     <p>Cross-fading a new page on load</p>
+     
+
+    <dd data-md="">
+     <p>A page may want to fade in on top of the previous page to make the navigation transition less jarring. The programming interface in this specification allows such an effect using just CSS on the destination page.</p>
+     
+
+     <pre class="example lang-css highlight" id="example-2844ea5d"><span class="k">@navigation-transition</span> <span class="nt">enter</span> <span class="nt">0</span><span class="nc">.5s</span> <span class="p">{</span>
+  <span class="nt">html</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="o">:</span> <span class="k">transparent</span><span class="p">;</span>
+    <span class="n">animation</span><span class="o">:</span> <span class="n">fade</span><span class="o">-</span><span class="n">in</span> <span class="m">0.5s</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">@keyframes</span> <span class="nt">fade-in</span> <span class="p">{</span>
+  <span class="nt">from</span> <span class="p">{</span> <span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span> <span class="p">}</span>
+  <span class="nt">to</span> <span class="p">{</span> <span class="k">opacity</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></pre>
+     
+
+
+    <dt data-md="">
+     <p>Sliding a new page in from the right</p>
+     
+
+    <dd data-md="">
+     <p>A page may want to slide in from the right to give the user an idea of space when navigating a site.</p>
+     
+
+     <pre class="example lang-css highlight" id="example-9a1baf45"><span class="k">@navigation-transition</span> <span class="nt">enter</span> <span class="nt">0</span><span class="nc">.2s</span> <span class="p">{</span>
+  <span class="nt">html</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="o">:</span> <span class="k">transparent</span><span class="p">;</span>
+    <span class="n">animation</span><span class="o">:</span> <span class="n">slide</span><span class="o">-</span><span class="n">in</span> <span class="m">0.2s</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">@keyframes</span> <span class="nt">slide-in</span> <span class="p">{</span>
+  <span class="nt">from</span> <span class="p">{</span> <span class="n">transform</span><span class="o">:</span> <span class="n">translateX</span><span class="p">(</span><span class="m">100%</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">}</span></pre>
+     
+
+
+    <dd data-md="">
+     <p>The previous page may want to slide away to the left during this transition, which can be done with an exit transition.</p>
+     
+
+     <pre class="example lang-css highlight" id="example-8053c04d"><span class="k">@navigation-transition</span> <span class="nt">exit</span> <span class="nt">0</span><span class="nc">.2s</span> <span class="p">{</span>
+  <span class="nt">html</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="o">:</span> <span class="k">transparent</span><span class="p">;</span>
+    <span class="n">animation</span><span class="o">:</span> <span class="n">slide</span><span class="o">-</span><span class="n">out</span> <span class="m">0.2s</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">@keyframes</span> <span class="nt">slide-out</span> <span class="p">{</span>
+  <span class="nt">to</span> <span class="p">{</span> <span class="n">transform</span><span class="o">:</span> <span class="n">translateX</span><span class="p">(</span><span class="m">-100%</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">}</span></pre>
+     
+
+
+    <dt data-md="">
+     <p>Fading a page while loading</p>
+     
+
+    <dd data-md="">
+     <p>A page may want to fade slightly to indicate to the user that it is not interactive while loading a new page.</p>
+     
+
+     <pre class="example lang-css highlight" id="example-7dd2d382"><span class="k">@navigation-transition</span> <span class="nt">exit</span> <span class="nt">0</span><span class="nc">.2s</span> <span class="nt">immediate</span> <span class="p">{</span>
+  <span class="nt">html</span> <span class="p">{</span>
+    <span class="n">animation</span><span class="o">:</span> <span class="n">fade</span> <span class="m">0.5s</span> <span class="k">both</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">@keyframes</span> <span class="nt">fade</span> <span class="p">{</span>
+  <span class="nt">to</span> <span class="p">{</span> <span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">3</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></pre>
+     
+
+    <dd data-md="">
+     <p>The destination page could also fade in to complete the effect.</p>
+     
+
+</dl>
+
+   <h2 class="heading settled" data-level="2" id="atnavigation-transition-rule"><span class="secno">2. </span><span class="content">The <dfn class="css" data-dfn-type="at-rule" data-export="" id="at-ruledef-navigation-transition">@navigation-transition<a class="self-link" href="#at-ruledef-navigation-transition"></a></dfn> rule</span><a class="self-link" href="#atnavigation-transition-rule"></a></h2>
+
+
+   <p>The <a class="css" data-link-type="maybe" href="#at-ruledef-navigation-transition">@navigation-transition</a> <a href="http://www.w3.org/TR/CSS21/syndata.html#at-rules">at-rule</a> consists of the @-keyword followed by any navigation transition properties and finally a block of style rules to apply during the defined navigation transition.</p>
+
+
+   <h3 class="heading settled" data-level="2.1" id="syntax"><span class="secno">2.1. </span><span class="content">Syntax</span><a class="self-link" href="#syntax"></a></h3>
+
+
+   <p>The syntax for the <a class="css" data-link-type="maybe" href="#at-ruledef-navigation-transition">@navigation-transition</a> rule is as follows:</p>
+
+
+   <p>navigation-transition <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-type">navigation-transition-type</a> <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-duration">navigation-transition-duration</a> [ <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-start">navigation-transition-start</a> ] [ <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-z-index">navigation-transition-z-index</a> ]</p>
+
+
+   <h4 class="heading settled" data-level="2.1.1" id="navigation-transition-type"><span class="secno">2.1.1. </span><span class="content">navigation-transition-type</span><a class="self-link" href="#navigation-transition-type"></a></h4>
+
+
+   <table class="definition descdef">
+    <tbody>
+     <tr>
+      <th>Name:
+      <td><dfn class="css" data-dfn-for="@navigation-transition" data-dfn-type="descriptor" data-export="" id="descdef-navigation-transition-navigation-transition-type">navigation-transition-type<a class="self-link" href="#descdef-navigation-transition-navigation-transition-type"></a></dfn>
+     <tr>
+      <th>For:
+      <td><a class="css" data-link-type="at-rule" href="#at-ruledef-navigation-transition">@navigation-transition</a>
+     <tr>
+      <th>Value:
+      <td class="prod"><a class="production css" data-link-type="type" href="#typedef-single-navigation-transition-type">&lt;single-navigation-transition-type></a><a data-link-type="grammar" href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
+     <tr>
+      <th>Initial:
+      <td>enter</table>
+
+
+   <p><dfn class="css" data-dfn-type="type" data-export="" id="typedef-single-navigation-transition-type">&lt;single-navigation-transition-type><a class="self-link" href="#typedef-single-navigation-transition-type"></a></dfn> = enter | exit</p>
+
+
+   <p>The values of <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-type">navigation-transition-type</a> have the following meanings:</p>
+
+
+   <dl>
+  
+    <dt><dfn class="css" data-dfn-for="navigation-transition-type" data-dfn-type="value" data-export="" id="valdef-navigation-transition-type-enter">enter<a class="self-link" href="#valdef-navigation-transition-type-enter"></a></dfn>
+  
+    <dd>
+    This navigation transition is for when a page has been navigated to.
+
+  
+    <dt><dfn class="css" data-dfn-for="navigation-transition-type" data-dfn-type="value" data-export="" id="valdef-navigation-transition-type-exit">exit<a class="self-link" href="#valdef-navigation-transition-type-exit"></a></dfn>
+  
+    <dd>
+    This navigation transition is for when a page has been navigated away from.
+</dl>
+
+
+   <h4 class="heading settled" data-level="2.1.2" id="navigation-transition-duration"><span class="secno">2.1.2. </span><span class="content">navigation-transition-duration</span><a class="self-link" href="#navigation-transition-duration"></a></h4>
+
+
+   <table class="definition descdef">
+    <tbody>
+     <tr>
+      <th>Name:
+      <td><dfn class="css" data-dfn-for="@navigation-transition" data-dfn-type="descriptor" data-export="" id="descdef-navigation-transition-navigation-transition-duration">navigation-transition-duration<a class="self-link" href="#descdef-navigation-transition-navigation-transition-duration"></a></dfn>
+     <tr>
+      <th>For:
+      <td><a class="css" data-link-type="at-rule" href="#at-ruledef-navigation-transition">@navigation-transition</a>
+     <tr>
+      <th>Value:
+      <td class="prod"><a class="production css" data-link-type="type" href="http://dev.w3.org/csswg/css-values-3/#time-value">&lt;time></a><a data-link-type="grammar" href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
+     <tr>
+      <th>Initial:
+      <td>0s</table>
+
+
+   <dl>
+  
+    <dt><dfn class="css" data-dfn-for="navigation-transition-duration" data-dfn-type="value" data-export="" id="valdef-navigation-transition-duration-time"><a class="production css" data-link-type="type" href="http://dev.w3.org/csswg/css-values-3/#time-value" title="Expands to: ">&lt;time></a><a class="self-link" href="#valdef-navigation-transition-duration-time"></a></dfn>
+  
+    <dd>
+    The <a class="production css" data-link-type="type" href="http://dev.w3.org/csswg/css-values-3/#time-value" title="Expands to: ">&lt;time></a> specifies the length of time that a navigation transition applies for. A negative <a class="production css" data-link-type="type" href="http://dev.w3.org/csswg/css-values-3/#time-value" title="Expands to: ">&lt;time></a> is invalid.
+
+
+     <p>If the <a class="production css" data-link-type="type" href="http://dev.w3.org/csswg/css-values-3/#time-value" title="Expands to: ">&lt;time></a> is <span class="css">0s</span>, the style of the transition will not be applied, but the transition itself still occurs instantaneously. Specifically, start and end events are fired.</p>
+     
+</dl>
+
+
+   <h4 class="heading settled" data-level="2.1.3" id="navigation-transition-start"><span class="secno">2.1.3. </span><span class="content">navigation-transition-start</span><a class="self-link" href="#navigation-transition-start"></a></h4>
+
+
+   <table class="definition descdef">
+    <tbody>
+     <tr>
+      <th>Name:
+      <td><dfn class="css" data-dfn-for="@navigation-transition" data-dfn-type="descriptor" data-export="" id="descdef-navigation-transition-navigation-transition-start">navigation-transition-start<a class="self-link" href="#descdef-navigation-transition-navigation-transition-start"></a></dfn>
+     <tr>
+      <th>For:
+      <td><a class="css" data-link-type="at-rule" href="#at-ruledef-navigation-transition">@navigation-transition</a>
+     <tr>
+      <th>Value:
+      <td class="prod"><a class="production css" data-link-type="type" href="#typedef-single-navigation-transition-start" title="Expands to: immediate | on-load">&lt;single-navigation-transition-start></a><a data-link-type="grammar" href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
+     <tr>
+      <th>Initial:
+      <td>on-load</table>
+
+
+   <p><dfn class="css" data-dfn-type="type" data-export="" id="typedef-single-navigation-transition-start">&lt;single-navigation-transition-start><a class="self-link" href="#typedef-single-navigation-transition-start"></a></dfn> = on-load | immediate</p>
+
+
+   <p>The values of <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-start">navigation-transition-start</a> have the following meanings:</p>
+
+
+   <dl>
+  
+    <dt><dfn class="css" data-dfn-for="navigation-transition-start, <single-navigation-transition-start>" data-dfn-type="value" data-export="" id="valdef-navigation-transition-start-on-load">on-load<a class="self-link" href="#valdef-navigation-transition-start-on-load"></a></dfn>
+  
+    <dd>
+    The transition will apply once the page has loaded. Specifically, after the <code>load</code> event associated with the page is emitted.
+  
+  
+    <dt><dfn class="css" data-dfn-for="navigation-transition-start, <single-navigation-transition-start>" data-dfn-type="value" data-export="" id="valdef-navigation-transition-start-immediate">immediate<a class="self-link" href="#valdef-navigation-transition-start-immediate"></a></dfn>
+  
+    <dd>
+    The transition will apply immediately after the page navigation is initiated.
+  
+</dl>
+
+
+   <h4 class="heading settled" data-level="2.1.4" id="navigation-transition-z-index"><span class="secno">2.1.4. </span><span class="content">navigation-transition-z-index</span><a class="self-link" href="#navigation-transition-z-index"></a></h4>
+
+
+   <table class="definition descdef">
+    <tbody>
+     <tr>
+      <th>Name:
+      <td><dfn class="css" data-dfn-for="@navigation-transition" data-dfn-type="descriptor" data-export="" id="descdef-navigation-transition-navigation-transition-z-index">navigation-transition-z-index<a class="self-link" href="#descdef-navigation-transition-navigation-transition-z-index"></a></dfn>
+     <tr>
+      <th>For:
+      <td><a class="css" data-link-type="at-rule" href="#at-ruledef-navigation-transition">@navigation-transition</a>
+     <tr>
+      <th>Value:
+      <td class="prod"><a class="production css" data-link-type="type" href="http://dev.w3.org/csswg/css-values-3/#integer-value">&lt;integer></a><a data-link-type="grammar" href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
+     <tr>
+      <th>Initial:
+      <td>0</table>
+
+
+   <dl>
+  
+    <dt><dfn class="css" data-dfn-for="navigation-transition-z-index" data-dfn-type="value" data-export="" id="valdef-navigation-transition-z-index-integer"><a class="production css" data-link-type="type" href="http://dev.w3.org/csswg/css-values-3/#integer-value" title="Expands to: ">&lt;integer></a><a class="self-link" href="#valdef-navigation-transition-z-index-integer"></a></dfn>
+  
+    <dd>
+    Assigns the page a z-ordering priority for when transitions on two pages happen simultaneously.
+</dl>
+
+
+
+   <h2 class="heading settled" data-level="3" id="starting"><span class="secno">3. </span><span class="content">Starting navigation transitions</span><a class="self-link" href="#starting"></a></h2>
+
+
+   <p>Navigation transitions can start either immediately, or after the window has emitted the <code>load</code> event associated with the page, as specified by the <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-start">navigation-transition-start</a> property. If a page has no navigation transition specified and a page is navigated to that has navigation transitions, it will remain on screen for the duration of the longest transition specified on the transitioning page. During navigation transitions, a page will remain in the window and the style rules specified in the <a class="css" data-link-type="maybe" href="#at-ruledef-navigation-transition">@navigation-transition</a> block will apply. The page that is being navigated to will be drawn on top of the page being navigated from, unless otherwise specified by the <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-z-index">navigation-transition-z-index</a> property. This is unrelated to an individual element’s <code>z-index</code>, each page is drawn entirely in its particular order and cannot interleave contents with the other page.</p>
+
+
+   <p>A navigation transition’s at rule will apply for the specified duration of the navigation transition. Once that duration has elapsed, the style block associated with the at-rule will no longer apply. If all navigation transition durations have elapsed and the page is being navigated from, the page will unload, similarly to if no navigation transition had been specified and the page had been navigated from.</p>
+
+
+   <h3 class="heading settled" data-level="3.1" id="multiple-transitions"><span class="secno">3.1. </span><span class="content">Multiple navigation transitions</span><a class="self-link" href="#multiple-transitions"></a></h3>
+
+
+   <p>In the situation that multiple navigation transitions are specified on a single page, all associated rules will apply, in the order in which they were defined. The page will stay loaded until all navigation transitions have completed.</p>
+
+
+   <h3 class="heading settled" data-level="3.2" id="navigating-backwards"><span class="secno">3.2. </span><span class="content">Navigating backwards</span><a class="self-link" href="#navigating-backwards"></a></h3>
+
+
+   <p>When navigating backwards, animations are also run backwards, as specified in the <a href="http://w3c.github.io/web-animations/#reverse-an-animation">Web Animations</a> specification. In addition, the page being navigated backwards to will be drawn underneath the page being navigated from, unless otherwise specified by the <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-z-index">navigation-transition-z-index</a> property.</p>
+
+
+   <h3 class="heading settled" data-level="3.3" id="interrupting-transitions"><span class="secno">3.3. </span><span class="content">Interrupting a navigation transition</span><a class="self-link" href="#interrupting-transitions"></a></h3>
+
+
+   <p>If the user agent needs to interrupt a navigation transition, for example, due to the user interrupting the page loading by navigating elsewhere, or by stopping transfers, all navigation transitions style rules will immediately stop applying. The <span class="css">navigationtransitionend</span> event will be emitted if any transitions were interrupted.</p>
+
+
+   <p>If a navigation transition that was scheduled to start on a page load via <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-start">navigation-transition-start</a> is interrupted, navigation transitions will stop applying, the page that was navigated from will unload and the new page will be displayed.</p>
+
+
+
+   <h2 class="heading settled" data-level="4" id="navigation-transitions-cssom"><span class="secno">4. </span><span class="content">CSSOM</span><a class="self-link" href="#navigation-transitions-cssom"></a></h2>
+
+
+   <p>The <a class="idl-code" data-link-type="interface" href="http://dev.w3.org/csswg/cssom-1/#cssrule">CSSRule</a> interface is extended as follows:</p>
+
+
+   <pre class="idl partial">partial interface <a class="idl-code" data-link-type="interface" href="http://dev.w3.org/csswg/cssom-1/#cssrule">CSSRule</a> {
+  const unsigned short <dfn class="idl-code" data-dfn-for="CSSRule" data-dfn-type="const" data-export="" id="dom-cssrule-navigation_transition_rule">NAVIGATION_TRANSITION_RULE<a class="self-link" href="#dom-cssrule-navigation_transition_rule"></a></dfn> = 1002;
+};
+</pre>
+
+
+   <p>The <a class="idl-code" data-link-type="interface" href="#cssnavigationtransitionrule">CSSNavigationTransitionRule</a> interface represents a <a class="css" data-link-type="maybe" href="#at-ruledef-navigation-transition">@navigation-transition</a> rule.</p>
+
+
+   <pre class="idl">interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="cssnavigationtransitionrule">CSSNavigationTransitionRule<a class="self-link" href="#cssnavigationtransitionrule"></a></dfn> : <a data-link-type="idl-name" href="http://dev.w3.org/csswg/cssom-1/#cssgroupingrule">CSSGroupingRule</a> {
+  attribute <a data-link-type="idl-name" href="#enumdef-navigationtransitiontype">NavigationTransitionType</a> <dfn class="idl-code" data-dfn-for="CSSNavigationTransitionRule" data-dfn-type="attribute" data-export="" data-type="NavigationTransitionType " id="dom-cssnavigationtransitionrule-type">type<a class="self-link" href="#dom-cssnavigationtransitionrule-type"></a></dfn>;
+  attribute DOMString <dfn class="idl-code" data-dfn-for="CSSNavigationTransitionRule" data-dfn-type="attribute" data-export="" data-type="DOMString " id="dom-cssnavigationtransitionrule-duration">duration<a class="self-link" href="#dom-cssnavigationtransitionrule-duration"></a></dfn>;
+  attribute <a data-link-type="idl-name" href="#enumdef-navigationtransitionstart">NavigationTransitionStart</a> <dfn class="idl-code" data-dfn-for="CSSNavigationTransitionRule" data-dfn-type="attribute" data-export="" data-type="NavigationTransitionStart " id="dom-cssnavigationtransitionrule-start">start<a class="self-link" href="#dom-cssnavigationtransitionrule-start"></a></dfn>;
+  attribute long <dfn class="idl-code" data-dfn-for="CSSNavigationTransitionRule" data-dfn-type="attribute" data-export="" data-type="long " id="dom-cssnavigationtransitionrule-zindex">zIndex<a class="self-link" href="#dom-cssnavigationtransitionrule-zindex"></a></dfn>;
+};
+
+enum <dfn class="idl-code" data-dfn-type="enum" data-export="" id="enumdef-navigationtransitiontype">NavigationTransitionType<a class="self-link" href="#enumdef-navigationtransitiontype"></a></dfn> { "enter", "exit" };
+enum <dfn class="idl-code" data-dfn-type="enum" data-export="" id="enumdef-navigationtransitionstart">NavigationTransitionStart<a class="self-link" href="#enumdef-navigationtransitionstart"></a></dfn> { "on-load", "immediate" };
+</pre>
+
+
+   <h2 class="heading settled" data-level="5" id="navigation-transition-events"><span class="secno">5. </span><span class="content">Navigation transition events</span><a class="self-link" href="#navigation-transition-events"></a></h2>
+
+
+   <p>Navigation transition-related events are available through the DOM Event system. The start and end of a navigation transition generates DOM events. A page can have multiple navigation transitions operating simultaneously. One <span class="css">navigationtransitionstart</span> event will be emitted when the first navigation transition starts, and one <span class="css">navigationtransitionend</span> event will be emitted when the last navigation transition ends.</p>
+
+
+   <h3 class="heading settled" data-level="5.1" id="interface-navigation-transition-event"><span class="secno">5.1. </span><span class="content">The <code>NavigationTransitionEvent</code> interface</span><a class="self-link" href="#interface-navigation-transition-event"></a></h3>
+
+
+   <p>The <code>NavigationTransitionEvent</code> interface provides specific contextual information associated with Navigation Transition events.</p>
+
+
+   <h4 class="heading settled" data-level="5.1.1" id="interface-navigation-transition-event-idl"><span class="secno">5.1.1. </span><span class="content">IDL Definition</span><a class="self-link" href="#interface-navigation-transition-event-idl"></a></h4>
+
+
+   <pre class="idl">[<dfn class="idl-code" data-dfn-for="NavigationTransitionEvent" data-dfn-type="constructor" data-export="" data-lt="NavigationTransitionEvent(type, navigationTransitionEventInitDict)" id="dom-navigationtransitionevent-navigationtransitionevent">Constructor<a class="self-link" href="#dom-navigationtransitionevent-navigationtransitionevent"></a></dfn>(DOMString <dfn class="idl-code" data-dfn-for="NavigationTransitionEvent/NavigationTransitionEvent(type, navigationTransitionEventInitDict)" data-dfn-type="argument" data-export="" id="dom-navigationtransitionevent-navigationtransitionevent-type-navigationtransitioneventinitdict-type">type<a class="self-link" href="#dom-navigationtransitionevent-navigationtransitionevent-type-navigationtransitioneventinitdict-type"></a></dfn>, optional <a data-link-type="idl-name" href="#dictdef-navigationtransitioneventinit">NavigationTransitionEventInit</a> <dfn class="idl-code" data-dfn-for="NavigationTransitionEvent/NavigationTransitionEvent(type, navigationTransitionEventInitDict)" data-dfn-type="argument" data-export="" id="dom-navigationtransitionevent-navigationtransitionevent-type-navigationtransitioneventinitdict-navigationtransitioneventinitdict">navigationTransitionEventInitDict<a class="self-link" href="#dom-navigationtransitionevent-navigationtransitionevent-type-navigationtransitioneventinitdict-navigationtransitioneventinitdict"></a></dfn>)]
+interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="navigationtransitionevent">NavigationTransitionEvent<a class="self-link" href="#navigationtransitionevent"></a></dfn> : <a data-link-type="idl-name" href="http://dom.spec.whatwg.org/#event">Event</a> {
+  readonly attribute DOMString <a class="idl-code" data-link-type="attribute" data-readonly="" data-type="DOMString " href="#dom-navigationtransitionevent-navigationtransitiontype">navigationTransitionType</a>;
+};
+dictionary <dfn class="idl-code" data-dfn-type="dictionary" data-export="" id="dictdef-navigationtransitioneventinit">NavigationTransitionEventInit<a class="self-link" href="#dictdef-navigationtransitioneventinit"></a></dfn> : <a data-link-type="idl-name" href="http://dom.spec.whatwg.org/#dictdef-eventinit">EventInit</a> {
+  DOMString <dfn class="idl-code" data-default="&quot;enter&quot;" data-dfn-for="NavigationTransitionEventInit" data-dfn-type="dict-member" data-export="" data-type="DOMString " id="dom-navigationtransitioneventinit-navigationtransitiontype">navigationTransitionType<a class="self-link" href="#dom-navigationtransitioneventinit-navigationtransitiontype"></a></dfn> = "enter";
+};
+</pre>
+
+
+   <h4 class="heading settled" data-level="5.1.2" id="interface-navigation-transition-event-attributes"><span class="secno">5.1.2. </span><span class="content">Attributes</span><a class="self-link" href="#interface-navigation-transition-event-attributes"></a></h4>
+
+
+   <dl>
+  
+    <dt><dfn class="idl-code" data-dfn-for="NavigationTransitionEvent" data-dfn-type="attribute" data-export="" id="dom-navigationtransitionevent-navigationtransitiontype">navigationTransitionType<a class="self-link" href="#dom-navigationtransitionevent-navigationtransitiontype"></a></dfn>, of type , <span> of type <a data-link-type="idl-name" href="http://heycam.github.io/webidl/#idl-DOMString">DOMString</a>, readonly</span><a class="idl-code" data-link-type="interface" href="http://heycam.github.io/webidl/#idl-DOMString">DOMString</a>, readonly
+  
+    <dd>
+    A string representing the type of navigation transition. Can take one of four values; <a class="css" data-link-type="maybe" href="#valdef-navigation-transition-type-enter">enter</a>, <span class="css">enter-back</span>, <a class="css" data-link-type="maybe" href="#valdef-navigation-transition-type-exit">exit</a> or <span class="css">exit-back</span>.
+</dl>
+
+
+   <h3 class="heading settled" data-level="5.2" id="event-navigation-transition-event"><span class="secno">5.2. </span><span class="content">Types of <code>NavigationTransitionEvent</code></span><a class="self-link" href="#event-navigation-transition-event"></a></h3>
+
+
+   <p>The different types of navigation transition events that can occur are:</p>
+
+
+   <dl>
+  
+    <dt><dfn class="idl-code" data-dfn-for="NavigationTransitionEvent" data-dfn-type="event" data-export="" id="dom-navigationtransitionevent-navigationtransitionstart">navigationtransitionstart<a class="self-link" href="#dom-navigationtransitionevent-navigationtransitionstart"></a></dfn>
+  
+    <dd>
+    The <a data-link-type="idl" href="#dom-navigationtransitionevent-navigationtransitionstart">navigationtransitionstart</a> event occurs at the start of the first transition.
+    
+     <ul>
+      
+      <li>Bubbles: Yes
+      
+      
+      <li>Cancelable: No
+      
+      
+      <li>Context Info: navigationTransitionType
+      
+    
+     </ul>
+     
+
+  
+    <dt><dfn class="idl-code" data-dfn-for="NavigationTransitionEvent" data-dfn-type="event" data-export="" id="dom-navigationtransitionevent-navigationtransitionend">navigationtransitionend<a class="self-link" href="#dom-navigationtransitionevent-navigationtransitionend"></a></dfn>
+  
+    <dd>
+    The <a data-link-type="idl" href="#dom-navigationtransitionevent-navigationtransitionend">navigationtransitionend</a> event occurs at the end of the last transition.
+    
+     <ul>
+      
+      <li>Bubbles: Yes
+      
+      
+      <li>Cancelable: No
+      
+      
+      <li>Context Info: navigationTransitionType
+      
+    
+     </ul>
+     
+</dl>
+
+
+   <h3 class="heading settled" data-level="5.3" id="navigation-transitions-event-ordering"><span class="secno">5.3. </span><span class="content">Ordering</span><a class="self-link" href="#navigation-transitions-event-ordering"></a></h3>
+
+
+   <p>A page’s <a data-link-type="idl" href="#dom-navigationtransitionevent-navigationtransitionstart">navigationtransitionstart</a> event will be fired after the first <a class="css" data-link-type="maybe" href="#at-ruledef-navigation-transition">@navigation-transition</a> block is applied, as specified by <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-start">navigation-transition-start</a>. This event will be fired before the first paint after the block is applied. A page’s <a data-link-type="idl" href="#dom-navigationtransitionevent-navigationtransitionend">navigationtransitionend</a> event will be fired after the duration specified by <a class="property" data-link-type="propdesc" href="#descdef-navigation-transition-navigation-transition-duration">navigation-transition-duration</a>. Although a navigation transition causes a page’s lifetime to extend to the duration of that transition, the page’s <code>beforeunload</code> event is unaffected and will fire before <a data-link-type="idl" href="#dom-navigationtransitionevent-navigationtransitionstart">navigationtransitionstart</a>.</p>
+
+</main>
+
+  <h2 class="no-ref no-num heading settled" id="conformance"><span class="content">
+Conformance</span><a class="self-link" href="#conformance"></a></h2>
+
+    
+  <p>
+        Conformance requirements are expressed with a combination of descriptive assertions and RFC 2119 terminology.
+        The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”
+        in the normative parts of this document
+        are to be interpreted as described in RFC 2119.
+        However, for readability,
+        these words do not appear in all uppercase letters in this specification.
+
+    </p>
+  <p>
+        All of the text of this specification is normative
+        except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119">[RFC2119]</a>
+
+    </p>
+  <p>
+        Examples in this specification are introduced with the words “for example”
+        or are set apart from the normative text with <code>class="example"</code>, like this:
+
+    </p>
+  <div class="example" id="example-ae2b6bc0"><a class="self-link" href="#example-ae2b6bc0"></a>
+        This is an example of an informative example.
+    </div>
+
+    
+  <p>
+        Informative notes begin with the word “Note”
+        and are set apart from the normative text with <code>class="note"</code>, like this:
+
+    </p>
+  <p class="note" role="note">
+        Note, this is an informative note.
+
+
+
+</p>
+  <h2 class="no-num heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
+  <h3 class="no-num heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
+  <ul class="indexlist">
+   <li>CSSNavigationTransitionRule, <a href="#cssnavigationtransitionrule">4</a>
+   <li>duration, <a href="#dom-cssnavigationtransitionrule-duration">4</a>
+   <li>enter, <a href="#valdef-navigation-transition-type-enter">2.1.1</a>
+   <li>exit, <a href="#valdef-navigation-transition-type-exit">2.1.1</a>
+   <li>immediate, <a href="#valdef-navigation-transition-start-immediate">2.1.3</a>
+   <li>&lt;integer>, <a href="#valdef-navigation-transition-z-index-integer">2.1.4</a>
+   <li>@navigation-transition, <a href="#at-ruledef-navigation-transition">2</a>
+   <li>navigation-transition-duration, <a href="#descdef-navigation-transition-navigation-transition-duration">2.1.2</a>
+   <li>navigationtransitionend, <a href="#dom-navigationtransitionevent-navigationtransitionend">5.2</a>
+   <li>NavigationTransitionEvent, <a href="#navigationtransitionevent">5.1.1</a>
+   <li>NavigationTransitionEventInit, <a href="#dictdef-navigationtransitioneventinit">5.1.1</a>
+   <li>navigationTransitionEventInitDict, <a href="#dom-navigationtransitionevent-navigationtransitionevent-type-navigationtransitioneventinitdict-navigationtransitioneventinitdict">5.1.1</a>
+   <li>NavigationTransitionEvent(type, navigationTransitionEventInitDict), <a href="#dom-navigationtransitionevent-navigationtransitionevent">5.1.1</a>
+   <li>NAVIGATION_TRANSITION_RULE, <a href="#dom-cssrule-navigation_transition_rule">4</a>
+   <li>NavigationTransitionStart, <a href="#enumdef-navigationtransitionstart">4</a>
+   <li>navigationtransitionstart, <a href="#dom-navigationtransitionevent-navigationtransitionstart">5.2</a>
+   <li>navigation-transition-start, <a href="#descdef-navigation-transition-navigation-transition-start">2.1.3</a>
+   <li>navigation-transition-type, <a href="#descdef-navigation-transition-navigation-transition-type">2.1.1</a>
+   <li>NavigationTransitionType, <a href="#enumdef-navigationtransitiontype">4</a>
+   <li>navigationTransitionType
+    <ul>
+     <li>dict-member for NavigationTransitionEventInit, <a href="#dom-navigationtransitioneventinit-navigationtransitiontype">5.1.1</a>
+     <li>attribute for NavigationTransitionEvent, <a href="#dom-navigationtransitionevent-navigationtransitiontype">5.1.2</a>
+    </ul>
+   <li>navigation-transition-z-index, <a href="#descdef-navigation-transition-navigation-transition-z-index">2.1.4</a>
+   <li>on-load, <a href="#valdef-navigation-transition-start-on-load">2.1.3</a>
+   <li>&lt;single-navigation-transition-start>, <a href="#typedef-single-navigation-transition-start">2.1.3</a>
+   <li>&lt;single-navigation-transition-type>, <a href="#typedef-single-navigation-transition-type">2.1.1</a>
+   <li>start, <a href="#dom-cssnavigationtransitionrule-start">4</a>
+   <li>&lt;time>, <a href="#valdef-navigation-transition-duration-time">2.1.2</a>
+   <li>type
+    <ul>
+     <li>attribute for CSSNavigationTransitionRule, <a href="#dom-cssnavigationtransitionrule-type">4</a>
+     <li>argument for NavigationTransitionEvent/NavigationTransitionEvent(type, navigationTransitionEventInitDict), <a href="#dom-navigationtransitionevent-navigationtransitionevent-type-navigationtransitioneventinitdict-type">5.1.1</a>
+    </ul>
+   <li>zIndex, <a href="#dom-cssnavigationtransitionrule-zindex">4</a>
+  </ul>
+  <h3 class="no-num heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
+  <ul class="indexlist">
+   <li><a data-link-type="biblio" href="#biblio-css-values-3">[css-values-3]</a> defines the following terms:
+    <ul>
+     <li><a href="http://dev.w3.org/csswg/css-values-3/#mult-comma">#</a>
+     <li><a href="http://dev.w3.org/csswg/css-values-3/#integer-value">&lt;integer></a>
+     <li><a href="http://dev.w3.org/csswg/css-values-3/#time-value">&lt;time></a>
+    </ul>
+   <li><a data-link-type="biblio" href="#biblio-cssom-1">[cssom-1]</a> defines the following terms:
+    <ul>
+     <li><a href="http://dev.w3.org/csswg/cssom-1/#cssgroupingrule">CSSGroupingRule</a>
+     <li><a href="http://dev.w3.org/csswg/cssom-1/#cssrule">CSSRule</a>
+    </ul>
+   <li><a data-link-type="biblio" href="#biblio-dom-ls">[dom-ls]</a> defines the following terms:
+    <ul>
+     <li><a href="http://dom.spec.whatwg.org/#event">Event</a>
+     <li><a href="http://dom.spec.whatwg.org/#dictdef-eventinit">EventInit</a>
+    </ul>
+   <li><a data-link-type="biblio" href="#biblio-webidl">[WebIDL]</a> defines the following terms:
+    <ul>
+     <li><a href="http://heycam.github.io/webidl/#idl-DOMString">DOMString</a>
+    </ul>
+  </ul>
+  <h2 class="no-num heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
+  <h3 class="no-num heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
+  <dl>
+   <dt id="biblio-webidl"><a class="self-link" href="#biblio-webidl"></a>[WebIDL]
+   <dd>Cameron McCormack. <a href="http://www.w3.org/TR/WebIDL/">Web IDL</a>. 19 April 2012. CR. URL: <a href="http://www.w3.org/TR/WebIDL/">http://www.w3.org/TR/WebIDL/</a>
+   <dt id="biblio-css-values-3"><a class="self-link" href="#biblio-css-values-3"></a>[CSS-VALUES-3]
+   <dd>CSS Values and Units Module Level 3 URL: <a href="http://www.w3.org/TR/css3-values/">http://www.w3.org/TR/css3-values/</a>
+   <dt id="biblio-cssom-1"><a class="self-link" href="#biblio-cssom-1"></a>[CSSOM-1]
+   <dd>CSS Object Model Level 1 URL: <a href="http://www.w3.org/TR/cssom/">http://www.w3.org/TR/cssom/</a>
+   <dt id="biblio-dom-ls"><a class="self-link" href="#biblio-dom-ls"></a>[DOM-LS]
+   <dd>Document Object Model URL: <a href="http://dom.spec.whatwg.org/">http://dom.spec.whatwg.org/</a>
+   <dt id="biblio-rfc2119"><a class="self-link" href="#biblio-rfc2119"></a>[RFC2119]
+   <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
+  </dl>
+  <h2 class="no-num heading settled" id="property-index"><span class="content">Property Index</span><a class="self-link" href="#property-index"></a></h2>
+  <p>No properties defined.</p>
+  <h3 class="no-num heading settled" id="navigation-transition-descriptor-table"><span class="content"><a class="css" data-link-type="at-rule" href="#at-ruledef-navigation-transition">@navigation-transition</a> Descriptors</span><a class="self-link" href="#navigation-transition-descriptor-table"></a></h3>
+  <table class="proptable data">
+   <thead>
+    <tr>
+     <th scope="col">Name
+     <th scope="col">Value
+     <th scope="col">Initial
+   <tbody>
+   <tr>
+    <th scope="row"><a class="css" data-link-type="descriptor" href="#descdef-navigation-transition-navigation-transition-type">navigation-transition-type</a>
+    <td>&lt;single-navigation-transition-type>#
+    <td>enter
+   <tr>
+    <th scope="row"><a class="css" data-link-type="descriptor" href="#descdef-navigation-transition-navigation-transition-duration">navigation-transition-duration</a>
+    <td>&lt;time>#
+    <td>0s
+   <tr>
+    <th scope="row"><a class="css" data-link-type="descriptor" href="#descdef-navigation-transition-navigation-transition-start">navigation-transition-start</a>
+    <td>&lt;single-navigation-transition-start>#
+    <td>on-load
+   <tr>
+    <th scope="row"><a class="css" data-link-type="descriptor" href="#descdef-navigation-transition-navigation-transition-z-index">navigation-transition-z-index</a>
+    <td>&lt;integer>#
+    <td>0
+  </table>
+  <h2 class="no-num heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
+  <pre class="idl">partial interface <a class="idl-code" data-link-type="interface" href="http://dev.w3.org/csswg/cssom-1/#cssrule">CSSRule</a> {
+  const unsigned short <a href="#dom-cssrule-navigation_transition_rule">NAVIGATION_TRANSITION_RULE</a> = 1002;
+};
+
+interface <a href="#cssnavigationtransitionrule">CSSNavigationTransitionRule</a> : <a data-link-type="idl-name" href="http://dev.w3.org/csswg/cssom-1/#cssgroupingrule">CSSGroupingRule</a> {
+  attribute <a data-link-type="idl-name" href="#enumdef-navigationtransitiontype">NavigationTransitionType</a> <a data-type="NavigationTransitionType " href="#dom-cssnavigationtransitionrule-type">type</a>;
+  attribute DOMString <a data-type="DOMString " href="#dom-cssnavigationtransitionrule-duration">duration</a>;
+  attribute <a data-link-type="idl-name" href="#enumdef-navigationtransitionstart">NavigationTransitionStart</a> <a data-type="NavigationTransitionStart " href="#dom-cssnavigationtransitionrule-start">start</a>;
+  attribute long <a data-type="long " href="#dom-cssnavigationtransitionrule-zindex">zIndex</a>;
+};
+
+enum <a href="#enumdef-navigationtransitiontype">NavigationTransitionType</a> { "enter", "exit" };
+enum <a href="#enumdef-navigationtransitionstart">NavigationTransitionStart</a> { "on-load", "immediate" };
+
+[<a href="#dom-navigationtransitionevent-navigationtransitionevent">Constructor</a>(DOMString <a href="#dom-navigationtransitionevent-navigationtransitionevent-type-navigationtransitioneventinitdict-type">type</a>, optional <a data-link-type="idl-name" href="#dictdef-navigationtransitioneventinit">NavigationTransitionEventInit</a> <a href="#dom-navigationtransitionevent-navigationtransitionevent-type-navigationtransitioneventinitdict-navigationtransitioneventinitdict">navigationTransitionEventInitDict</a>)]
+interface <a href="#navigationtransitionevent">NavigationTransitionEvent</a> : <a data-link-type="idl-name" href="http://dom.spec.whatwg.org/#event">Event</a> {
+  readonly attribute DOMString <a class="idl-code" data-link-type="attribute" data-readonly="" data-type="DOMString " href="#dom-navigationtransitionevent-navigationtransitiontype">navigationTransitionType</a>;
+};
+dictionary <a href="#dictdef-navigationtransitioneventinit">NavigationTransitionEventInit</a> : <a data-link-type="idl-name" href="http://dom.spec.whatwg.org/#dictdef-eventinit">EventInit</a> {
+  DOMString <a data-default="&quot;enter&quot;" data-type="DOMString " href="#dom-navigationtransitioneventinit-navigationtransitiontype">navigationTransitionType</a> = "enter";
+};
+
+</pre></body>
+</html>
