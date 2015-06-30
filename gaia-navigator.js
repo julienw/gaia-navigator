@@ -272,24 +272,26 @@ window.addEventListener('load',
     var i, iLen;
     window.removeEventListener('load', gnc_onLoad);
 
-    // TODO: Don't do this, use a click handler to intercept?
     console.log('Rewriting links');
-    var anchors = document.getElementsByTagName('a');
-    for (i = 0, iLen = anchors.length; i < iLen; i++) {
-      var a = anchors[i];
-      if (!a.href || !a.href.length || a.href[0] === '#' || a.onclick ||
-          a.download || a.target || a.href.indexOf('javascript:') === 0) {
-        continue;
+
+    document.body.addEventListener('click', function handleClick(e) {
+      if (e.defaultPrevented) {
+        return;
       }
 
-      a.addEventListener('click', function handleClick(url) {
-          return function(e) {
-            e.preventDefault();
-            window.parent.postMessage({ type: 'host-navigate', url: url }, '*');
-          }
-        }(a.href));
-      a.href = '';
-    }
+      var a = e.target;
+      if (!a.matches('a')) {
+        return;
+      }
+
+      if (!a.href || !a.href.length || a.href[0] === '#' || a.onclick ||
+          a.download || a.target || a.href.indexOf('javascript:') === 0) {
+        return;
+      }
+
+      e.preventDefault();
+      window.parent.postMessage({ type: 'host-navigate', url: a.href }, '*');
+    });
 
     console.log('Checking for navigation transition rules');
 
@@ -369,7 +371,7 @@ window.addEventListener('load',
                 title: document.title,
                 hasTransitions: gncNavTrans.length > 0 }, '*');
           }
-        }
+        };
       }(link);
       request.send();
     }
@@ -512,7 +514,7 @@ function gnc_transition(type, backwards, to) {
  */
 function gnc_getLocation() {
   var fakeLocation = {};
-  for (property in location) {
+  for (var property in location) {
     switch (property) {
       case 'assign':
         fakeLocation[property] = function(uri) {
@@ -565,7 +567,7 @@ function gnc_getLocation() {
  */
 function gnc_getHistory() {
   var fakeHistory = {};
-  for (property in history) {
+  for (var property in history) {
     switch (property) {
       case 'length':
         Object.defineProperty(fakeHistory, property, {
