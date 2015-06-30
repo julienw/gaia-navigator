@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name='viewport' content='initial-scale=1'>
+    <link rel="transition-enter" duration="2s" href="navigation-enter.css" />
+    <link rel="transition-exit" duration="2s" href="navigation-exit.css" />
+    <link rel='stylesheet' href='main.css'>
+    <link rel='stylesheet' href='conversation.css'>
+    <script src='utils.js' defer></script>
+    <script src='navigation.js' defer></script>
+    <script src='conversation.js' defer></script>
+    <script src='../../gaia-navigator.js' defer></script>
+  </head>
+  <body>
+    <section class='panel'>
+      <a href='inbox.html' class='js-back-button'>Go back</a>
+      <label class='inline-checkbox'>
+        <input type='checkbox' class='js-should-confirm-checkbox'> with confirmation
+      </label>
+      <div class='content'>
+      </div>
+      <div class='js-confirmation-dialog dialog' hidden>
+        <p>Do you really want to go back ?</p>
+        <div class='dialog-choices'>
+          <button class='js-dialog-choice-yes'>Yes</button>
+          <button class='js-dialog-choice-no'>No</button>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
